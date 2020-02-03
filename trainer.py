@@ -12,9 +12,10 @@ class TravelGAN(nn.Module):
     def __init__(self, input_nc, output_nc, num_downs, ngf, dropout,
                  ndf, n_layers_dis, nsf, n_layers_siam, latent_dim,
                  lr_gen, lr_dis, margin, lambda_adv, lambda_travel,
-                 lambda_margin, lambda_gp, type, sn, sa, device="cpu"):
+                 lambda_margin, lambda_gp, type, sn, sa, L=6, device="cpu"):
         super(TravelGAN, self).__init__()
         # Parameters
+        self.L = L
         self.input_nc = input_nc
         self.output_nc = output_nc
         self.num_downs = num_downs

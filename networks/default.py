@@ -61,7 +61,7 @@ class UnetSkipConnectionBlock(nn.Module):
         |-- downsampling -- |submodule| -- upsampling --|
     """
 
-    def __init__(self, outer_nc, inner_nc, input_nc=None,
+    def __init__(self, outer_nc, inner_nc, kernel_size=(4, 4), input_nc=None,
                  submodule=None, outermost=False, innermost=False,
                  norm_layer=nn.BatchNorm2d, use_self_attention=False,
                  use_dropout=False):
@@ -73,7 +73,7 @@ class UnetSkipConnectionBlock(nn.Module):
             use_bias = norm_layer == nn.InstanceNorm2d
         if input_nc is None:
             input_nc = outer_nc
-        downconv = nn.Conv2d(input_nc, inner_nc, kernel_size=4,
+        downconv = nn.Conv2d(input_nc, inner_nc, kernel_size=kernel_size,
                              stride=2, padding=1, bias=use_bias)
         downrelu = nn.LeakyReLU(0.2, True)
         downnorm = norm_layer(inner_nc)
@@ -83,21 +83,21 @@ class UnetSkipConnectionBlock(nn.Module):
 
         if outermost:
             upconv = nn.ConvTranspose2d(inner_nc * 2, outer_nc,
-                                        kernel_size=4, stride=2,
+                                        kernel_size=kernel_size, stride=2,
                                         padding=1)
             down = [downconv]
             up = [uprelu, upconv, nn.Tanh()]
             model = down + [submodule] + up
         elif innermost:
             upconv = nn.ConvTranspose2d(inner_nc, outer_nc,
-                                        kernel_size=4, stride=2,
+                                        kernel_size=kernel_size, stride=2,
                                         padding=1, bias=use_bias)
             down = [downrelu, downconv]
             up = [uprelu, upconv, upnorm, upatt]
             model = down + up
         else:
             upconv = nn.ConvTranspose2d(inner_nc * 2, outer_nc,
-                                        kernel_size=4, stride=2,
+                                        kernel_size=kernel_size, stride=2,
                                         padding=1, bias=use_bias)
             down = [downrelu, downconv, downnorm]
             up = [uprelu, upconv, upnorm, upatt]

@@ -1,20 +1,14 @@
 {
+  "L": 256,
   "n_epochs": 12500,
   "n_save_steps": 500,
-  "dataset": {
-    "type": "cifar",
-    "data_path": "./data",
-    "label_a": "bird",
-    "label_b": "ship",
-    "n_tracks": 5000
-  },
   "loading": {
     "batch_size": 16,
     "shuffle": true
   },
   "model": {
-    "input_nc": 3,
-    "output_nc": 3,
+    "input_nc": 1,
+    "output_nc": 1,
     "num_downs": 3,
     "ngf": 64,
     "dropout": false,
@@ -30,7 +24,7 @@
     "lambda_travel": 10,
     "lambda_margin": 10,
     "lambda_gp": 0,
-    "sn": true,
+    "sn": false,
     "sa": false,
     "type": "vanilla"
   }
